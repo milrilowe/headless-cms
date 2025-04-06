@@ -21,4 +21,37 @@ model User {
   role      String   @default("user") // "user", "admin", etc.
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Relation to sites
+  sites     Site[]
+}
+
+model Site {
+  id              Int       @id @default(autoincrement())
+  name            String    // Friendly name for the site
+  domain          String    @unique // The client's domain (e.g., client-site.com)
+  storageBucket   String    @unique // S3 bucket name or path
+  storageRegion   String    @default("us-east-1") // AWS region or equivalent
+  isActive        Boolean   @default(true) // Toggle to enable/disable site
+  lastPublishedAt DateTime?  // Track when site was last published
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  userId          Int       // Owner of the site
+  user            User      @relation(fields: [userId], references: [id])
+  publishEvents   PublishEvent[]
+  
+  @@index([userId])
+}
+
+model PublishEvent {
+  id          Int      @id @default(autoincrement())
+  siteId      Int
+  site        Site     @relation(fields: [siteId], references: [id])
+  publishedAt DateTime @default(now())
+  status      String   // "success", "failed", etc.
+  message     String?  // Any details about the publish event
+  
+  @@index([siteId])
 }
