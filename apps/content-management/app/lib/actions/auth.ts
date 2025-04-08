@@ -6,7 +6,6 @@ import { useAppSession } from '../auth/session'
 // Login server action
 export const login = createServerFn({ method: 'POST' })
     .validator((data: unknown) => {
-        console.log('Login data:', data)
         return loginSchema.parse(data)
     })
     .handler(async ({ data }) => {

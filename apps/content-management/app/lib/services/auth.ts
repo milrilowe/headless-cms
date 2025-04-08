@@ -10,13 +10,13 @@ export const authService = {
         })
 
         if (!user) {
-            return { user: null }
+            return null
         }
 
         const isValidPassword = compareSync(password, user.password)
 
         if (!isValidPassword) {
-            return { user: null }
+            return null
         }
 
         // Return user without password
