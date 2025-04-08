@@ -10,32 +10,23 @@ export const getUserList = createServerFn({ method: 'GET' })
             const session = (await useAppSession()).data
 
             if (!session || !session.userId) {
-                return {
-                    success: false,
-                    message: 'Unauthorized'
-                }
+                throw new Error('Unauthorized');
             }
 
             if (session.role !== 'admin') {
-                return {
-                    success: false,
-                    message: 'Permission denied'
-                }
+                throw new Error('Permission denied');
             }
 
             // Get the list of users
             const users = await userService.getAllUsers();
 
-            return {
-                success: true,
-                users
-            }
+            return users;
+
         } catch (error) {
             console.error('Error getting user list:', error)
-            return {
-                success: false,
-                message: error instanceof Error ? error.message : 'An unexpected error occurred'
-            }
+            throw new Error(
+                error instanceof Error ? error.message : 'An unexpected error occurred'
+            )
         }
     })
 
@@ -51,34 +42,22 @@ export const deleteUser = createServerFn({ method: 'POST' })
             const session = (await useAppSession()).data
 
             if (!session || !session.userId) {
-                return {
-                    success: false,
-                    message: 'Unauthorized'
-                }
+                throw new Error('Unauthorized');
             }
 
             if (session.role !== 'admin') {
-                return {
-                    success: false,
-                    message: 'Permission denied'
-                }
+                throw new Error('Permission denied');
             }
 
             // Prevent admin from deleting themselves
             if (data.userId === session.userId) {
-                return {
-                    success: false,
-                    message: 'Cannot delete your own account'
-                }
+                throw new Error('Admin cannot delete themselves');
             }
 
             // Check if the user has any sites
             const userHasSites = await userService.hasAssociatedSites(data.userId)
             if (userHasSites) {
-                return {
-                    success: false,
-                    message: 'Cannot delete user with associated sites. Transfer or delete their sites first.'
-                }
+                throw new Error('User has associated sites and cannot be deleted');
 
             }
 
@@ -90,9 +69,8 @@ export const deleteUser = createServerFn({ method: 'POST' })
             }
         } catch (error) {
             console.error('Error deleting user:', error)
-            return {
-                success: false,
-                message: error instanceof Error ? error.message : 'An unexpected error occurred'
-            }
+            throw new Error(
+                error instanceof Error ? error.message : 'An unexpected error occurred'
+            )
         }
     })

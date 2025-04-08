@@ -2,7 +2,6 @@ import { compareSync, hashSync } from 'bcryptjs'
 import { db } from '@/lib/db'
 import type { LoginInput, RegisterInput } from '@/lib/schemas/auth'
 
-
 export const authService = {
     async login({ email, password }: LoginInput) {
         const user = await db.user.findUnique({
@@ -44,7 +43,7 @@ export const authService = {
 
     async getUserById(id: number) {
         if (!id) {
-            return { user: null }
+            return null
         }
 
         const user = await db.user.findUnique({
