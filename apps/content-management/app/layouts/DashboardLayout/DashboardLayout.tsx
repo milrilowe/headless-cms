@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button"
-import { Outlet, redirect } from "@tanstack/react-router"
+import { Outlet, redirect, useRouter } from "@tanstack/react-router"
 import { logout } from '@/lib/actions/auth'
 
 export function DashboardLayout() {
+    const router = useRouter();
 
-    function handleLogoutClick() {
-        logout();
-        redirect({ to: "/login" })
+    async function handleLogoutClick() {
+        await logout();
+        router.invalidate();
     }
 
     return (
