@@ -25,7 +25,7 @@ export const login = createServerFn({ method: 'POST' })
 
 
             await session.update({
-                userId: user.id,
+                id: user.id,
                 email: user.email,
                 role: user.role || 'user',
             })

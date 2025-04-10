@@ -7,13 +7,13 @@ export const getUserList = createServerFn({ method: 'GET' })
     .handler(async () => {
         try {
             // Get the current user's session to check permissions
-            const session = (await useAppSession()).data
+            const sessionData = (await useAppSession()).data
 
-            if (!session || !session.userId) {
+            if (!sessionData || !sessionData.id) {
                 throw new Error('Unauthorized');
             }
 
-            if (session.role !== 'admin') {
+            if (sessionData.role !== 'admin') {
                 throw new Error('Permission denied');
             }
 
@@ -39,18 +39,18 @@ export const deleteUser = createServerFn({ method: 'POST' })
     .handler(async ({ data }) => {
         try {
             // Get the current user's session to check permissions
-            const session = (await useAppSession()).data
+            const sessionData = (await useAppSession()).data
 
-            if (!session || !session.userId) {
+            if (!sessionData || !sessionData.id) {
                 throw new Error('Unauthorized');
             }
 
-            if (session.role !== 'admin') {
+            if (sessionData.role !== 'admin') {
                 throw new Error('Permission denied');
             }
 
             // Prevent admin from deleting themselves
-            if (data.userId === session.userId) {
+            if (data.userId === sessionData.id) {
                 throw new Error('Admin cannot delete themselves');
             }
 

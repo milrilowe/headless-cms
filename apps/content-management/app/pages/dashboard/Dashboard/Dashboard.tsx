@@ -2,7 +2,7 @@ import { AdminFeature } from '@/components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UserManagement, SiteManagement } from './components';
 
-export function Dashboard({ user, users, sites }) {
+export function Dashboard({ user, users }) {
     return (
         <div className="space-y-6">
             {/* Page Header */}
@@ -14,20 +14,10 @@ export function Dashboard({ user, users, sites }) {
             </div>
 
             {/* Admin Tabs using shadcn/ui */}
-            <AdminFeature user={user} fallback={<SiteManagement sites={sites} />}>
-                <Tabs defaultValue="users" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="users">Users</TabsTrigger>
-                        <TabsTrigger value="sites">Sites</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="users">
-                        <UserManagement users={users} />
-                    </TabsContent>
-                    <TabsContent value="sites">
-                        <SiteManagement sites={sites} />
-                    </TabsContent>
-                </Tabs>
-            </AdminFeature>
+
+            <UserManagement users={users} />
+
+
         </div>
     );
 }

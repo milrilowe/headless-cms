@@ -4,10 +4,10 @@ import {
     createRootRoute,
     HeadContent,
     Scripts,
+    createRootRouteWithContext,
 } from '@tanstack/react-router'
 
 import appCss from "@/styles/app.css?url"
-import { getCurrentUser } from '@/lib/actions/auth';
 import { DefaultCatchBoundary, NotFound } from '@/components';
 
 export const Route = createRootRoute({
@@ -31,13 +31,6 @@ export const Route = createRootRoute({
             },
         ],
     }),
-    beforeLoad: async () => {
-        const user = await getCurrentUser();
-
-        return {
-            user
-        }
-    },
     errorComponent: (props) => {
         return (
             <RootDocument>

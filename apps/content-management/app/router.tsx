@@ -1,8 +1,10 @@
 import { createRouter as createTanStackRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { DefaultCatchBoundary, NotFound } from './components'
+import { useAuth } from './hooks/useAuth';
 
 export function createRouter() {
+
     const router = createTanStackRouter({
         routeTree,
         defaultPreload: 'intent',

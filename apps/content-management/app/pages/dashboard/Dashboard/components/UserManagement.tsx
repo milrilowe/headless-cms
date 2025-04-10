@@ -1,27 +1,14 @@
-import { useState, useEffect } from 'react';
-import { getUserList, deleteUser } from '@/lib/actions/users';
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
-import { Trash2, AlertCircle, Check, Loader2 } from 'lucide-react';
-
-type User = {
-    id: number;
-    name: string | null;
-    email: string;
-    role: string;
-    createdAt: string;
-};
+import { User } from '@/types';
 
 interface Props {
-    users: User[];
+    users: Array<User>;
 }
 
 export function UserManagement({ users }: Props) {
     async function handleDeleteUser(userId: number) {
         console.log('Deleting user with ID:', userId);
     }
-
-    console.log('Users:', users);
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">

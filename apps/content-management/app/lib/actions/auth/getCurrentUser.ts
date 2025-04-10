@@ -5,14 +5,13 @@ import { createServerFn } from "@tanstack/react-start";
 export const getCurrentUser = createServerFn({ method: 'GET' })
     .handler(async () => {
         try {
-            const session = await useAppSession()
-            const data = session.data;
+            const sessionData = (await useAppSession()).data
 
-            if (!data || !data.userId) {
-                return null
+            if (!sessionData || !sessionData.id) {
+                return await authService.getUserById(sessionData.id);
             }
 
-            return await authService.getUserById(data.userId);
+            return sessionData;
 
         } catch (error) {
             console.error('Get current user error:', error);

@@ -1,11 +1,5 @@
 import { useSession } from '@tanstack/react-start/server'
-import type { User } from '@prisma/client'
-
-type SessionUser = {
-    userId: User['id']
-    email: User['email']
-    role: User['role']
-}
+import { SessionUser } from '@/types'
 
 export function useAppSession() {
     return useSession<SessionUser>({
