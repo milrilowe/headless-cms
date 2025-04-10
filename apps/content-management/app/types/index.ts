@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client'
+import type { User as PrismaUser } from '@prisma/client'
 
 // Session user with only essential info
 export type SessionUser = {
@@ -8,4 +8,4 @@ export type SessionUser = {
     role: User['role']
 }
 
-export type User = Omit<User, 'password' | 'createdAt' | 'updatedAt'>
+export type User = Omit<PrismaUser, 'password'>

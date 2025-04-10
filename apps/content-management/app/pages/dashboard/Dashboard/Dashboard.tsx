@@ -17,7 +17,6 @@ export function Dashboard({ user, users }) {
 
             <UserManagement users={users} />
 
-
         </div>
     );
 }
