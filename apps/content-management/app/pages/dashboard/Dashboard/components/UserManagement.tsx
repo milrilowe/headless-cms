@@ -112,7 +112,7 @@ export function UserManagement({ users, currentUser }: UserManagementProps) {
                             </TableRow>
                         ) : (
                             users.map((user) => (
-                                <TableRow key={user.id}>
+                                <TableRow key={user.id} onClick={() => console.log(user)}>
                                     <TableCell className="font-medium">
                                         <div className="flex flex-col">
                                             <span className="font-medium">{user.name || 'Unnamed User'}</span>
