@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
 
-export async function isSoleOwnerOfAnOrganization(userId: number) {
-    // Find organizations where this user is the only owner
-    const orgsWithSoleOwner = await db.organization.findMany({
+export async function isSoleOwnerOfAWorkspace(userId: number) {
+    // Find workspaces where this user is the only owner
+    const orgsWithSoleOwner = await db.workspace.findMany({
         where: {
             members: {
                 some: {
@@ -23,7 +23,7 @@ export async function isSoleOwnerOfAnOrganization(userId: number) {
         }
     });
 
-    // Check if any of these organizations have only this user as owner
+    // Check if any of these workspaces have only this user as owner
     return orgsWithSoleOwner.some(org =>
         org.members.length === 1 && org.members[0].userId === userId
     );

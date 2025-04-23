@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 export async function getSitesForUser(userId: number) {
     return db.site.findMany({
         where: {
-            organization: {
+            workspace: {
                 members: {
                     some: {
                         userId
@@ -12,7 +12,7 @@ export async function getSitesForUser(userId: number) {
             }
         },
         include: {
-            organization: {
+            workspace: {
                 select: {
                     id: true,
                     name: true,

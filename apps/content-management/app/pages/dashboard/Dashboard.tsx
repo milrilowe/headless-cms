@@ -30,7 +30,7 @@ export function Dashboard({ user, isAdmin }: Props) {
     const [isCheckingSlug, setIsCheckingSlug] = useState(false);
 
     // Check if user has a personal workspace
-    const hasPersonalWorkspace = !!user.personalOrganizationId;
+    const hasPersonalWorkspace = !!user.personalWorkspaceId;
 
     // Set up form with default values
     const form = useForm<WorkspaceFormValues>({

@@ -1,8 +1,8 @@
 import { deleteUser } from './deleteUser';
 import { getAllUsers } from './getAllUsers';
 import { getUserById } from './getUserById';
-import { hasOrganizationAssociations } from './hasOrganizationAssociations';
-import { isSoleOwnerOfAnOrganization } from './isSoleOwnerOfAnOrganization';
+import { hasWorkspaceAssociations } from './hasWorkspaceAssociations';
+import { isSoleOwnerOfAWorkspace } from './isSoleOwnerOfAWorkspace';
 import { updateUserRole } from './updateUserRole';
 
 export const userService = {
@@ -10,15 +10,15 @@ export const userService = {
     getUserById,
     updateUserRole,
     deleteUser,
-    hasOrganizationAssociations,
-    isSoleOwnerOfAnOrganization
+    hasWorkspaceAssociations,
+    isSoleOwnerOfAWorkspace
 };
 
-export { 
+export {
     getAllUsers,
     getUserById,
     updateUserRole,
     deleteUser,
-    hasOrganizationAssociations,
-    isSoleOwnerOfAnOrganization
+    hasWorkspaceAssociations,
+    isSoleOwnerOfAWorkspace
 }

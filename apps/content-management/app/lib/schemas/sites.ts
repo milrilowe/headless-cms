@@ -12,7 +12,7 @@ export const createSiteFormSchema = z.object({
 });
 
 export const createSiteSchema = createSiteFormSchema.extend({
-    organizationId: z.number()
+    workspaceId: z.number()
 });
 
 export const updateSiteFormSchema = z.object({

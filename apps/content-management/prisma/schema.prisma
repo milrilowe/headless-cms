@@ -8,24 +8,24 @@ datasource db {
 }
 
 model User {
-  id                     Int      @id @default(autoincrement())
-  email                  String   @unique
-  name                   String?
-  password               String
-  systemRole             String   @default("user") // "user", "admin", "superadmin"
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-  image                  String   @default("/images/default_avatar.png")
-  personalOrganizationId Int?     @unique 
+  id                  Int      @id @default(autoincrement())
+  email               String   @unique
+  name                String?
+  password            String
+  systemRole          String   @default("user") // "user", "admin", "superadmin"
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  image               String   @default("/images/default_avatar.png")
+  personalWorkspaceId Int?     @unique
 
-  personalOrganization Organization?        @relation("PersonalOrganization", fields: [personalOrganizationId], references: [id])
-  memberships          OrganizationMember[]
-  siteCollaborations   SiteCollaborator[] 
+  personalWorkspace  Workspace?         @relation("PersonalWorkspace", fields: [personalWorkspaceId], references: [id])
+  memberships        WorkspaceMember[]
+  siteCollaborations SiteCollaborator[]
 
-  @@index([personalOrganizationId])
+  @@index([personalWorkspaceId])
 }
 
-model Organization {
+model Workspace {
   id        Int      @id @default(autoincrement())
   name      String
   slug      String   @unique // For URL-friendly paths
@@ -34,25 +34,25 @@ model Organization {
   updatedAt DateTime @updatedAt
 
   // Relations
-  members      OrganizationMember[]
+  members      WorkspaceMember[]
   sites        Site[]
-  personalUser User?                @relation("PersonalOrganization") // NEW: Link to user if this is a personal organization
+  personalUser User?             @relation("PersonalWorkspace") // NEW: Link to user if this is a personal workspace
 }
 
-model OrganizationMember {
+model WorkspaceMember {
   id        Int      @id @default(autoincrement())
   role      String   @default("member") // "owner", "admin", "editor", "member"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  organizationId Int
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  userId         Int
-  user           User         @relation(fields: [userId], references: [id])
+  workspaceId Int
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
 
-  @@unique([organizationId, userId]) // A user can only have one role per organization
-  @@index([organizationId])
+  @@unique([workspaceId, userId]) // A user can only have one role per workspace
+  @@index([workspaceId])
   @@index([userId])
 }
 
@@ -68,12 +68,12 @@ model Site {
   updatedAt       DateTime  @updatedAt
 
   // Relations
-  organizationId Int
-  organization   Organization       @relation(fields: [organizationId], references: [id])
-  publishEvents  PublishEvent[]
-  collaborators  SiteCollaborator[] // NEW: Site-level collaborators
+  workspaceId   Int
+  workspace     Workspace          @relation(fields: [workspaceId], references: [id])
+  publishEvents PublishEvent[]
+  collaborators SiteCollaborator[] // NEW: Site-level collaborators
 
-  @@index([organizationId])
+  @@index([workspaceId])
 }
 
 model SiteCollaborator {

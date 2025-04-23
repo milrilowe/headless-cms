@@ -4,7 +4,7 @@ export async function userHasAccessToSite(userId: number, siteId: number) {
     const site = await db.site.findFirst({
         where: {
             id: siteId,
-            organization: {
+            workspace: {
                 members: {
                     some: {
                         userId

@@ -1,10 +1,10 @@
 import { db } from "@/lib/db";
 
 export async function userHasPermissionForSite(userId: number, siteId: number, requiredRoles: string[]) {
-    const membership = await db.organizationMember.findFirst({
+    const membership = await db.workspaceMember.findFirst({
         where: {
             userId,
-            organization: {
+            workspace: {
                 sites: {
                     some: {
                         id: siteId

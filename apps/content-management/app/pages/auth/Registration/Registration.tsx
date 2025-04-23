@@ -28,7 +28,7 @@ export function Registration() {
             email: '',
             password: '',
             name: '',
-            organizationName: ''
+            workspaceName: ''
         }
     })
 
@@ -125,10 +125,10 @@ export function Registration() {
 
                             <FormField
                                 control={form.control}
-                                name="organizationName"
+                                name="workspaceName"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-gray-700 text-sm">Organization Name</FormLabel>
+                                        <FormLabel className="text-gray-700 text-sm">Workspace Name</FormLabel>
                                         <FormControl>
                                             <div className="relative">
                                                 <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-blue-400" />

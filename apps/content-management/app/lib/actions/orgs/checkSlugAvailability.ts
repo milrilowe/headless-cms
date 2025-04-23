@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { checkSlugAvailability } from "@/lib/services/orgs";
+import { checkSlugAvailability } from "@/lib/services/workspaces";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
 

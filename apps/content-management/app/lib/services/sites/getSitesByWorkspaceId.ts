@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
 
-export async function getSitesByOrganizationId(organizationId: number) {
+export async function getSitesByWorkspaceId(workspaceId: number) {
     return db.site.findMany({
-        where: { organizationId },
+        where: { workspaceId },
         orderBy: { createdAt: 'desc' }
     });
 }
