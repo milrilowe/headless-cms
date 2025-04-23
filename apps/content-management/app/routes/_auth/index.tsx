@@ -1,6 +1,5 @@
 import { getUserList } from '@/lib/actions/users';
 import { Dashboard } from '@/pages/dashboard';
-import { UserDashboard } from '@/pages/user';
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth/')({

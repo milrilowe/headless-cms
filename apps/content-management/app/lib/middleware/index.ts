@@ -2,20 +2,27 @@ import { createMiddleware } from "@tanstack/react-start";
 import { useAppSession } from "@/lib/auth/session";
 import { isAdmin, isAuthenticated, isSuperAdmin } from "@/lib/auth/permissions";
 
-export const requireisAuthenticatedMiddleware = createMiddleware().server(async ({ next, context }) => {
-    const sessionData = (await useAppSession()).data;
+export const getSessionMiddleware = createMiddleware()
+    .server(async ({ next }) => {
+        const sessionData = (await useAppSession()).data;
+        return next({ context: { session: sessionData } });
+    });
 
-    if (!isAuthenticated(sessionData)) {
-        throw new Error('Unauthorized');
-    }
+export const requireisAuthenticatedMiddleware = createMiddleware()
+    .server(async ({ next }) => {
+        const sessionData = (await useAppSession()).data;
 
-    return next({ context: { session: sessionData } });
-});
+        if (!isAuthenticated(sessionData.user)) {
+            throw new Error('Unauthorized');
+        }
+
+        return next({ context: { session: sessionData } });
+    });
 
 export const requireIsAdminMiddleware = createMiddleware()
     .middleware([requireisAuthenticatedMiddleware])
     .server(async ({ next, context }) => {
-        if (!isAdmin(context.session)) {
+        if (!isAdmin(context.session.user)) {
             throw new Error('Permission denied');
         }
 
@@ -25,7 +32,7 @@ export const requireIsAdminMiddleware = createMiddleware()
 export const requireIsSuperAdminMiddleware = createMiddleware()
     .middleware([requireisAuthenticatedMiddleware])
     .server(async ({ next, context }) => {
-        if (!isSuperAdmin(context.session)) {
+        if (!isSuperAdmin(context.session.user)) {
             throw new Error('Permission denied');
         }
 

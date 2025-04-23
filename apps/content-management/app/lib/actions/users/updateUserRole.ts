@@ -13,11 +13,8 @@ export const updateUserRole = createServerFn({ method: 'POST' })
         }
 
         try {
-            await userService.updateUserRole(data.userId, data.role);
+            return await userService.updateUserRole(data.userId, data.role);
 
-            return {
-                success: true,
-            };
         } catch (error) {
             console.error('Error updating user role:', error);
             throw new Error(

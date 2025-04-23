@@ -8,7 +8,7 @@ export const Route = createFileRoute('/_auth')({
         try {
             const session = await getSession();
 
-            if (!session) {
+            if (!session.user) {
                 throw redirect({ to: "/login" })
             }
 
@@ -18,12 +18,8 @@ export const Route = createFileRoute('/_auth')({
         } catch (error) {
             throw redirect({ to: "/login" })
         }
-
-
-
     },
     component: RouteLayout,
-    notFoundComponent: () => <NotFound />,
 })
 
 function RouteLayout() {

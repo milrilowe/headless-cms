@@ -18,11 +18,8 @@ export const deleteUser = createServerFn({ method: 'POST' })
 
         try {
 
-            await userService.deleteUser(data.userId)
+            return await userService.deleteUser(data.userId)
 
-            return {
-                success: true
-            }
         } catch (error) {
             console.error('Error deleting user:', error)
             throw new Error(

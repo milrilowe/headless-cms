@@ -32,12 +32,7 @@ export default function Login() {
     async function onSubmit(data: LoginInput) {
         startTransition(async () => {
             try {
-                const result = await login({ data })
-
-                if (!result.success) {
-                    toast.error(result.message)
-                    return
-                }
+                const user = await login({ data })
 
                 toast.success('Login successful!')
                 navigate({ to: '/' })

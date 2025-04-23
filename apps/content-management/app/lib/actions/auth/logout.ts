@@ -2,7 +2,7 @@ import { useAppSession } from "@/lib/auth/session";
 import { createServerFn } from "@tanstack/react-start";
 
 export const logout = createServerFn({ method: 'POST' })
-    .handler(async () => {
+    .handler(async ({ context }) => {
         try {
             const session = await useAppSession();
             await session.clear();

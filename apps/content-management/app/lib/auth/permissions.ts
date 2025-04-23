@@ -1,13 +1,13 @@
-import { ISession } from "@/types";
+import { ISession, IUser } from "@/types";
 
-export function isAuthenticated(session: ISession | null): boolean {
-    return !!session && !!session.user.id;
+export function isAuthenticated(user: IUser): boolean {
+    return !!user;
 }
 
-export function isAdmin(session: ISession): boolean {
-    return session.user.systemRole === 'admin' || session.user.systemRole === 'superadmin';
+export function isAdmin(user: IUser): boolean {
+    return user.systemRole === 'admin' || user.systemRole === 'superadmin';
 }
 
-export function isSuperAdmin(session: ISession): boolean {
-    return session.user.systemRole === 'superadmin';
+export function isSuperAdmin(user: IUser): boolean {
+    return user.systemRole === 'superadmin';
 }
