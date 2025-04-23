@@ -11,5 +11,5 @@ export const registerSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters')
 })
 
-export type LoginInput = z.infer<typeof loginSchema>
-export type RegisterInput = z.infer<typeof registerSchema>
+export type LoginInput = z.infer<typeof loginSchema>;
+export type RegisterInput = z.infer<typeof registerSchema>;

@@ -1,17 +1,13 @@
 import { useAppSession } from "@/lib/auth/session";
+import { requireisAuthenticatedMiddleware } from "@/lib/middleware";
 import { authService } from "@/lib/services/auth";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getCurrentUser = createServerFn({ method: 'GET' })
-    .handler(async () => {
+    .middleware([requireisAuthenticatedMiddleware])
+    .handler(async ({ context }) => {
         try {
-            const sessionData = (await useAppSession()).data
-
-            if (!sessionData || !sessionData.id) {
-                return await authService.getUserById(sessionData.id);
-            }
-
-            return sessionData;
+            return context.user;
 
         } catch (error) {
             console.error('Get current user error:', error);

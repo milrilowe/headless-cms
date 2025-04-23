@@ -9,7 +9,6 @@ export const register = createServerFn({ method: 'POST' })
     })
     .handler(async ({ data }) => {
         try {
-            // Check if email is already in use - use service
             const emailExists = await authService.emailExists(data.email);
 
             if (emailExists) {
@@ -19,7 +18,6 @@ export const register = createServerFn({ method: 'POST' })
                 }
             }
 
-            // Use service to handle registration
             const user = await authService.register(data);
 
             if (!user) {
@@ -35,7 +33,7 @@ export const register = createServerFn({ method: 'POST' })
             await session.update({
                 id: user.id,
                 email: user.email,
-                role: user.role || 'user',
+                role: user.systemRole,
             });
 
             return {

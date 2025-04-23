@@ -15,8 +15,12 @@ import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthIndexImport } from './routes/_auth/index'
+import { Route as AuthTeamImport } from './routes/_auth/team'
+import { Route as AuthSitesImport } from './routes/_auth/sites'
+import { Route as AuthSettingsImport } from './routes/_auth/settings'
 import { Route as AuthProfileImport } from './routes/_auth/profile'
-import { Route as AuthDashboardImport } from './routes/_auth/dashboard'
+import { Route as AuthBillingImport } from './routes/_auth/billing'
+import { Route as AuthAnalyticsImport } from './routes/_auth/analytics'
 import { Route as AuthUserUserIdImport } from './routes/_auth/user/$userId'
 
 // Create/Update Routes
@@ -44,15 +48,39 @@ const AuthIndexRoute = AuthIndexImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
+const AuthTeamRoute = AuthTeamImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthSitesRoute = AuthSitesImport.update({
+  id: '/sites',
+  path: '/sites',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthSettingsRoute = AuthSettingsImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthRoute,
+} as any)
+
 const AuthProfileRoute = AuthProfileImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthDashboardRoute = AuthDashboardImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AuthBillingRoute = AuthBillingImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthAnalyticsRoute = AuthAnalyticsImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -87,11 +115,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/dashboard': {
-      id: '/_auth/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthDashboardImport
+    '/_auth/analytics': {
+      id: '/_auth/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthAnalyticsImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/billing': {
+      id: '/_auth/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof AuthBillingImport
       parentRoute: typeof AuthImport
     }
     '/_auth/profile': {
@@ -99,6 +134,27 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthProfileImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/settings': {
+      id: '/_auth/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthSettingsImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/sites': {
+      id: '/_auth/sites'
+      path: '/sites'
+      fullPath: '/sites'
+      preLoaderRoute: typeof AuthSitesImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/team': {
+      id: '/_auth/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof AuthTeamImport
       parentRoute: typeof AuthImport
     }
     '/_auth/': {
@@ -121,15 +177,23 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthRouteChildren {
-  AuthDashboardRoute: typeof AuthDashboardRoute
+  AuthAnalyticsRoute: typeof AuthAnalyticsRoute
+  AuthBillingRoute: typeof AuthBillingRoute
   AuthProfileRoute: typeof AuthProfileRoute
+  AuthSettingsRoute: typeof AuthSettingsRoute
+  AuthSitesRoute: typeof AuthSitesRoute
+  AuthTeamRoute: typeof AuthTeamRoute
   AuthIndexRoute: typeof AuthIndexRoute
   AuthUserUserIdRoute: typeof AuthUserUserIdRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-  AuthDashboardRoute: AuthDashboardRoute,
+  AuthAnalyticsRoute: AuthAnalyticsRoute,
+  AuthBillingRoute: AuthBillingRoute,
   AuthProfileRoute: AuthProfileRoute,
+  AuthSettingsRoute: AuthSettingsRoute,
+  AuthSitesRoute: AuthSitesRoute,
+  AuthTeamRoute: AuthTeamRoute,
   AuthIndexRoute: AuthIndexRoute,
   AuthUserUserIdRoute: AuthUserUserIdRoute,
 }
@@ -140,8 +204,12 @@ export interface FileRoutesByFullPath {
   '': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/dashboard': typeof AuthDashboardRoute
+  '/analytics': typeof AuthAnalyticsRoute
+  '/billing': typeof AuthBillingRoute
   '/profile': typeof AuthProfileRoute
+  '/settings': typeof AuthSettingsRoute
+  '/sites': typeof AuthSitesRoute
+  '/team': typeof AuthTeamRoute
   '/': typeof AuthIndexRoute
   '/user/$userId': typeof AuthUserUserIdRoute
 }
@@ -149,8 +217,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/dashboard': typeof AuthDashboardRoute
+  '/analytics': typeof AuthAnalyticsRoute
+  '/billing': typeof AuthBillingRoute
   '/profile': typeof AuthProfileRoute
+  '/settings': typeof AuthSettingsRoute
+  '/sites': typeof AuthSitesRoute
+  '/team': typeof AuthTeamRoute
   '/': typeof AuthIndexRoute
   '/user/$userId': typeof AuthUserUserIdRoute
 }
@@ -160,8 +232,12 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/_auth/dashboard': typeof AuthDashboardRoute
+  '/_auth/analytics': typeof AuthAnalyticsRoute
+  '/_auth/billing': typeof AuthBillingRoute
   '/_auth/profile': typeof AuthProfileRoute
+  '/_auth/settings': typeof AuthSettingsRoute
+  '/_auth/sites': typeof AuthSitesRoute
+  '/_auth/team': typeof AuthTeamRoute
   '/_auth/': typeof AuthIndexRoute
   '/_auth/user/$userId': typeof AuthUserUserIdRoute
 }
@@ -172,19 +248,37 @@ export interface FileRouteTypes {
     | ''
     | '/login'
     | '/signup'
-    | '/dashboard'
+    | '/analytics'
+    | '/billing'
     | '/profile'
+    | '/settings'
+    | '/sites'
+    | '/team'
     | '/'
     | '/user/$userId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/signup' | '/dashboard' | '/profile' | '/' | '/user/$userId'
+  to:
+    | '/login'
+    | '/signup'
+    | '/analytics'
+    | '/billing'
+    | '/profile'
+    | '/settings'
+    | '/sites'
+    | '/team'
+    | '/'
+    | '/user/$userId'
   id:
     | '__root__'
     | '/_auth'
     | '/login'
     | '/signup'
-    | '/_auth/dashboard'
+    | '/_auth/analytics'
+    | '/_auth/billing'
     | '/_auth/profile'
+    | '/_auth/settings'
+    | '/_auth/sites'
+    | '/_auth/team'
     | '/_auth/'
     | '/_auth/user/$userId'
   fileRoutesById: FileRoutesById
@@ -220,8 +314,12 @@ export const routeTree = rootRoute
     "/_auth": {
       "filePath": "_auth.tsx",
       "children": [
-        "/_auth/dashboard",
+        "/_auth/analytics",
+        "/_auth/billing",
         "/_auth/profile",
+        "/_auth/settings",
+        "/_auth/sites",
+        "/_auth/team",
         "/_auth/",
         "/_auth/user/$userId"
       ]
@@ -232,12 +330,28 @@ export const routeTree = rootRoute
     "/signup": {
       "filePath": "signup.tsx"
     },
-    "/_auth/dashboard": {
-      "filePath": "_auth/dashboard.tsx",
+    "/_auth/analytics": {
+      "filePath": "_auth/analytics.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/billing": {
+      "filePath": "_auth/billing.tsx",
       "parent": "/_auth"
     },
     "/_auth/profile": {
       "filePath": "_auth/profile.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/settings": {
+      "filePath": "_auth/settings.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/sites": {
+      "filePath": "_auth/sites.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/team": {
+      "filePath": "_auth/team.tsx",
       "parent": "/_auth"
     },
     "/_auth/": {

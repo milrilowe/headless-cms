@@ -1,0 +1,33 @@
+import { createMiddleware } from "@tanstack/react-start";
+import { useAppSession } from "@/lib/auth/session";
+import { isAdmin, isAuthenticated, isSuperAdmin } from "@/lib/auth/permissions";
+
+export const requireisAuthenticatedMiddleware = createMiddleware().server(async ({ next, context }) => {
+    const sessionData = (await useAppSession()).data;
+
+    if (!isAuthenticated(sessionData)) {
+        throw new Error('Unauthorized');
+    }
+
+    return next({ context: { user: sessionData } });
+});
+
+export const requireIsAdminMiddleware = createMiddleware()
+    .middleware([requireisAuthenticatedMiddleware])
+    .server(async ({ next, context }) => {
+        if (!isAdmin(context.user)) {
+            throw new Error('Permission denied');
+        }
+
+        return next();
+    });
+
+export const requireIsSuperAdminMiddleware = createMiddleware()
+    .middleware([requireisAuthenticatedMiddleware])
+    .server(async ({ next, context }) => {
+        if (!isSuperAdmin(context.user)) {
+            throw new Error('Permission denied');
+        }
+
+        return next();
+    });

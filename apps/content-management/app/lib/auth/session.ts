@@ -1,8 +1,8 @@
 import { useSession } from '@tanstack/react-start/server'
-import { SessionUser } from '@/types'
+import { ISessionUser } from '@/types'
 
 export function useAppSession() {
-    return useSession<SessionUser>({
+    return useSession<ISessionUser>({
         password: process.env.SESSION_SECRET || 'ChangeThisBeforeShippingToProdOrYouWillBeFired',
     })
 }

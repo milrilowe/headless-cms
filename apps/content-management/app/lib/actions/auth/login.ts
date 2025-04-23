@@ -27,7 +27,7 @@ export const login = createServerFn({ method: 'POST' })
             await session.update({
                 id: user.id,
                 email: user.email,
-                role: user.role || 'user',
+                role: user.systemRole,
             })
 
             return {
@@ -36,7 +36,7 @@ export const login = createServerFn({ method: 'POST' })
                     id: user.id,
                     email: user.email,
                     name: user.name,
-                    role: user.role
+                    role: user.systemRole
                 }
             }
         } catch (error) {
