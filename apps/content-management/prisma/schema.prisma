@@ -8,75 +8,105 @@ datasource db {
 }
 
 model User {
-  id                    Int                     @id @default(autoincrement())
-  email                 String                  @unique
-  name                  String? 
-  password              String  
-  systemRole            String                  @default("user") // "user", "admin", "superadmin"
-  createdAt             DateTime                @default(now())
-  updatedAt             DateTime                @updatedAt
-  image                 String                  @default("/images/default_avatar.png")
-  // Relation to organizations
-  memberships           OrganizationMember[]
+  id                     Int      @id @default(autoincrement())
+  email                  String   @unique
+  name                   String?
+  password               String
+  systemRole             String   @default("user") // "user", "admin", "superadmin"
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  image                  String   @default("/images/default_avatar.png")
+  personalOrganizationId Int?     @unique 
+
+  personalOrganization Organization?        @relation("PersonalOrganization", fields: [personalOrganizationId], references: [id])
+  memberships          OrganizationMember[]
+  siteCollaborations   SiteCollaborator[] 
+
+  @@index([personalOrganizationId])
 }
 
 model Organization {
-  id                    Int                     @id @default(autoincrement())
-  name                  String
-  slug                  String                  @unique // For URL-friendly paths
-  createdAt             DateTime                @default(now())
-  updatedAt             DateTime                @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique // For URL-friendly paths
+  type      String   @default("team") // "personal" or "team"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  members               OrganizationMember[]
-  sites                 Site[]
+  members      OrganizationMember[]
+  sites        Site[]
+  personalUser User?                @relation("PersonalOrganization") // NEW: Link to user if this is a personal organization
 }
 
 model OrganizationMember {
-  id                    Int                     @id @default(autoincrement())
-  role                  String                  @default("member") // "owner", "admin", "editor", "member"
-  createdAt             DateTime                @default(now())
-  updatedAt             DateTime                @updatedAt
-  
+  id        Int      @id @default(autoincrement())
+  role      String   @default("member") // "owner", "admin", "editor", "member"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  organizationId        Int
-  organization          Organization            @relation(fields: [organizationId], references: [id])
-  userId                Int 
-  user                  User                    @relation(fields: [userId], references: [id])
-  
+  organizationId Int
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  userId         Int
+  user           User         @relation(fields: [userId], references: [id])
+
   @@unique([organizationId, userId]) // A user can only have one role per organization
   @@index([organizationId])
   @@index([userId])
 }
 
 model Site {
-  id                    Int                     @id @default(autoincrement())
-  name                  String                  // Friendly name for the site
-  domain                String                  @unique // The client's domain
-  storageRegion         String                  @default("us-east-1") // AWS region or equivalent
-  isActive              Boolean                 @default(true) // Toggle to enable/disable site
-  lastPublishedAt       DateTime?               // Track when site was last published
-  createdAt             DateTime                @default(now())
-  updatedAt             DateTime                @updatedAt
-  
+  id              Int       @id @default(autoincrement())
+  name            String // Friendly name for the site
+  domain          String    @unique // The client's domain
+  storageRegion   String    @default("us-east-1") // AWS region or equivalent
+  isActive        Boolean   @default(true) // Toggle to enable/disable site
+  lastPublishedAt DateTime? // Track when site was last published
+  isPublic        Boolean   @default(false) // NEW: Is this site publicly viewable
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
   // Relations
-  organizationId        Int
-  organization          Organization            @relation(fields: [organizationId], references: [id])
-  publishEvents         PublishEvent[]
-  
+  organizationId Int
+  organization   Organization       @relation(fields: [organizationId], references: [id])
+  publishEvents  PublishEvent[]
+  collaborators  SiteCollaborator[] // NEW: Site-level collaborators
+
   @@index([organizationId])
 }
 
+model SiteCollaborator {
+  id              Int      @id @default(autoincrement())
+  role            String // "editor", "viewer", etc.
+  email           String? // Email for pending invites
+  status          String   @default("pending") // "pending", "active"
+  invitedByUserId Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  siteId Int
+  site   Site  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  userId Int? // Optional: null for pending invites by email
+  user   User? @relation(fields: [userId], references: [id])
+
+  @@unique([siteId, userId]) // A user can only have one role per site
+  @@unique([siteId, email]) // An email can only have one invitation per site
+  @@index([siteId])
+  @@index([userId])
+}
+
 model PublishEvent {
-  id                    Int                     @id @default(autoincrement())
-  siteId                Int 
-  site                  Site                    @relation(fields: [siteId], references: [id])
-  publishedAt           DateTime                @default(now())
-  status                String                  // "success", "failed", etc.
-  message               String?                 // Any details about the publish event
-  
+  id          Int      @id @default(autoincrement())
+  siteId      Int
+  site        Site     @relation(fields: [siteId], references: [id])
+  publishedAt DateTime @default(now())
+  status      String // "success", "failed", etc.
+  message     String? // Any details about the publish event
+
   // You could also track who triggered the publish
-  publishedById         Int?
-  
+  publishedById Int?
+
   @@index([siteId])
 }

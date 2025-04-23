@@ -31,9 +31,7 @@ export const register = createServerFn({ method: 'POST' })
             const session = await useAppSession();
 
             await session.update({
-                id: user.id,
-                email: user.email,
-                role: user.systemRole,
+                user
             });
 
             return {

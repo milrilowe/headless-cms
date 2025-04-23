@@ -12,7 +12,7 @@ export const deleteUser = createServerFn({ method: 'POST' })
     .validator(zodValidator(deleteUserSchema))
     .middleware([requireIsAdminMiddleware])
     .handler(async ({ data, context }) => {
-        if (data.userId === context.user.id) {
+        if (data.userId === context.session.user.id) {
             throw new Error('Admin cannot delete themselves');
         }
 

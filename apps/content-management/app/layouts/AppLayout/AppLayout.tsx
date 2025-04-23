@@ -5,6 +5,7 @@ import {
     CreditCard,
     Globe,
     LayoutDashboard,
+    LogOut,
     Moon,
     Settings,
     Sun,
@@ -15,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { getInitials } from "@/lib/utils";
-import type { IUser } from "@/types";
+import type { ISession, IUser } from "@/types";
 import {
     Sidebar,
     SidebarContent,
@@ -34,9 +35,10 @@ import {
 interface DashboardLayoutProps {
     user: IUser;
     isAdmin?: boolean;
+    onLogout: () => void;
 }
 
-export function AppLayout({ user, isAdmin = false }: DashboardLayoutProps) {
+export function AppLayout({ user, isAdmin = false, onLogout }: DashboardLayoutProps) {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
@@ -53,8 +55,6 @@ export function AppLayout({ user, isAdmin = false }: DashboardLayoutProps) {
     const toggleTheme = () => {
         setTheme(theme === 'dark' ? 'light' : 'dark');
     };
-
-    const initials = getInitials(user.name || "User Name");
 
     const navigationItems = [
         { href: "/", icon: <LayoutDashboard className="h-4 w-4" />, label: "Dashboard" },
@@ -121,31 +121,39 @@ export function AppLayout({ user, isAdmin = false }: DashboardLayoutProps) {
                 <SidebarFooter className="border-t p-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <Avatar className="h-8 w-8">
-                                <AvatarImage src={"/placeholder.svg"} alt={user.name || "User"} />
-                                <AvatarFallback>{initials}</AvatarFallback>
-                            </Avatar>
                             <div className="overflow-hidden">
                                 <p className="text-sm font-medium truncate">{user.name}</p>
                                 <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                             </div>
                         </div>
 
-                        {mounted && (
+                        <div className="flex items-center gap-2">
+                            {mounted && (
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={toggleTheme}
+                                    className="h-8 w-8"
+                                    aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                                >
+                                    {theme === 'dark' ? (
+                                        <Sun className="h-4 w-4" />
+                                    ) : (
+                                        <Moon className="h-4 w-4" />
+                                    )}
+                                </Button>
+                            )}
+
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={toggleTheme}
-                                className="h-8 w-8"
-                                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                                onClick={onLogout}
+                                className="h-8 w-8 text-red-500 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/20"
+                                aria-label="Sign out"
                             >
-                                {theme === 'dark' ? (
-                                    <Sun className="h-4 w-4" />
-                                ) : (
-                                    <Moon className="h-4 w-4" />
-                                )}
+                                <LogOut className="h-4 w-4" />
                             </Button>
-                        )}
+                        </div>
                     </div>
                 </SidebarFooter>
             </Sidebar>

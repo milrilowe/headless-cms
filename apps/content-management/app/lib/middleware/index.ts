@@ -9,13 +9,13 @@ export const requireisAuthenticatedMiddleware = createMiddleware().server(async 
         throw new Error('Unauthorized');
     }
 
-    return next({ context: { user: sessionData } });
+    return next({ context: { session: sessionData } });
 });
 
 export const requireIsAdminMiddleware = createMiddleware()
     .middleware([requireisAuthenticatedMiddleware])
     .server(async ({ next, context }) => {
-        if (!isAdmin(context.user)) {
+        if (!isAdmin(context.session)) {
             throw new Error('Permission denied');
         }
 
@@ -25,7 +25,7 @@ export const requireIsAdminMiddleware = createMiddleware()
 export const requireIsSuperAdminMiddleware = createMiddleware()
     .middleware([requireisAuthenticatedMiddleware])
     .server(async ({ next, context }) => {
-        if (!isSuperAdmin(context.user)) {
+        if (!isSuperAdmin(context.session)) {
             throw new Error('Permission denied');
         }
 

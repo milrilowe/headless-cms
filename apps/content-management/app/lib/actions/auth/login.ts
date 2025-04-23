@@ -25,19 +25,12 @@ export const login = createServerFn({ method: 'POST' })
 
 
             await session.update({
-                id: user.id,
-                email: user.email,
-                role: user.systemRole,
+                user
             })
 
             return {
                 success: true,
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    name: user.name,
-                    role: user.systemRole
-                }
+                user
             }
         } catch (error) {
             console.error('Login error:', error)

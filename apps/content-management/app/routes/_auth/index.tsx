@@ -1,4 +1,5 @@
 import { getUserList } from '@/lib/actions/users';
+import { Dashboard } from '@/pages/dashboard';
 import { UserDashboard } from '@/pages/user';
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -15,7 +16,7 @@ export const Route = createFileRoute('/_auth/')({
 
 function RouteComponent() {
   const state = Route.useLoaderData();
-  const user = Route.useRouteContext().user;
+  const session = Route.useRouteContext().session;
 
-  return <>s</>
+  return <Dashboard user={session.user} isAdmin={session.isAdmin} />
 }

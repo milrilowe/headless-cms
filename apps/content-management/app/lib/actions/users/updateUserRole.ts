@@ -8,7 +8,7 @@ export const updateUserRole = createServerFn({ method: 'POST' })
     .validator(zodValidator(updateUserRoleSchema))
     .middleware([requireIsSuperAdminMiddleware])
     .handler(async ({ context, data }) => {
-        if (context.user.id === data.userId) {
+        if (context.session.user.id === data.userId) {
             throw new Error('You cannot update your own role');
         }
 

@@ -10,7 +10,7 @@ export const updateSite = createServerFn({ method: 'POST' })
     .middleware([requireisAuthenticatedMiddleware])
     .handler(async ({ data, context }) => {
         try {
-            return await updateSiteService(context.user.id, data);
+            return await updateSiteService(context.session.user.id, data);
 
         } catch (error) {
             console.error('Error updating site:', error);

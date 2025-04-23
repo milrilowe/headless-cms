@@ -1,21 +1,25 @@
 import { NotFound } from '@/components'
 import { AppLayout } from '@/layouts/AppLayout';
-import { getCurrentUser, logout } from '@/lib/actions/auth';
+import { getSession, logout } from '@/lib/actions/auth';
 import { createFileRoute, Outlet, redirect, useLoaderData, useRouter } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth')({
     beforeLoad: async ({ context }) => {
-        const user = await getCurrentUser();
+        try {
+            const session = await getSession();
 
-        if (!user) {
+            if (!session) {
+                throw redirect({ to: "/login" })
+            }
+
+            return {
+                session
+            }
+        } catch (error) {
             throw redirect({ to: "/login" })
         }
 
-        return {
-            user,
-            isAuthenticated: true,
-            isAdmin: user.role === 'admin',
-        }
+
 
     },
     component: RouteLayout,
@@ -23,19 +27,19 @@ export const Route = createFileRoute('/_auth')({
 })
 
 function RouteLayout() {
-    const { user } = Route.useRouteContext();
+    const { session } = Route.useRouteContext();
     const router = useRouter();
+
+    async function handleLogout() {
+        await logout();
+        router.invalidate();
+    }
 
     return (
         <AppLayout
-            user={user}
-            onLogout={async () => {
-                await logout();
-                router.invalidate();
-            }
-            }
-        >
-            <Outlet />
-        </AppLayout >
+            user={session.user}
+            onLogout={handleLogout}
+            isAdmin={session.isAdmin}
+        />
     )
 }

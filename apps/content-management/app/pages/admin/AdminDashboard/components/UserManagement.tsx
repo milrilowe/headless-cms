@@ -43,22 +43,22 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 
-import type { ISessionUser, IUser } from '@/types';
+import type { ISession, IUser } from '@/types';
 import { useNavigate } from '@tanstack/react-router';
 
 interface UserManagementProps {
     users: Array<IUser>;
-    currentUser?: ISessionUser;
+    session: ISession;
 }
 
-export function UserManagement({ users, currentUser }: UserManagementProps) {
+export function UserManagement({ users, session }: UserManagementProps) {
     const navigate = useNavigate();
 
     const [deletingUser, setDeletingUser] = useState<number | null>(null);
     const [confirmDeleteDialog, setConfirmDeleteDialog] = useState<boolean>(false);
-    const [selectedUser, setSelectedUser] = useState<ISessionUser | null>(null);
+    const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
-    const handleDeleteUser = (user: ISessionUser) => {
+    const handleDeleteUser = (user: IUser) => {
         setSelectedUser(user);
         setConfirmDeleteDialog(true);
     };
@@ -83,7 +83,7 @@ export function UserManagement({ users, currentUser }: UserManagementProps) {
         }
     };
 
-    const handleChangeRole = async (user: ISessionUser, newRole: 'user' | 'admin') => {
+    const handleChangeRole = async (user: IUser, newRole: 'user' | 'admin') => {
         toast.info(`Changing ${user.email}'s role to ${newRole}... (Not implemented)`);
         // Implement role change logic here
     };
@@ -119,15 +119,15 @@ export function UserManagement({ users, currentUser }: UserManagementProps) {
                                     </TableCell>
                                     <TableCell>
                                         <Badge
-                                            variant={user.role === 'admin' ? 'destructive' : 'secondary'}
+                                            variant={user.systemRole === 'admin' ? 'destructive' : 'secondary'}
                                             className="capitalize"
                                         >
-                                            {user.role === 'admin' ? (
+                                            {user.systemRole === 'admin' ? (
                                                 <Shield className="h-3 w-3 mr-1" />
                                             ) : (
                                                 <UserIcon className="h-3 w-3 mr-1" />
                                             )}
-                                            {user.role}
+                                            {user.systemRole}
                                         </Badge>
                                     </TableCell>
                                     <TableCell>
@@ -156,20 +156,20 @@ export function UserManagement({ users, currentUser }: UserManagementProps) {
                                                     </DropdownMenuItem>
 
                                                     {/* Change role options */}
-                                                    {user.role !== 'admin' && (
+                                                    {user.systemRole !== 'admin' && (
                                                         <DropdownMenuItem
                                                             onClick={(e) => { e.stopPropagation(); handleChangeRole(user, 'admin') }}
-                                                            disabled={user.id === currentUser?.id}
+                                                            disabled={user.id === session.user.id}
                                                         >
                                                             <Shield className="mr-2 h-4 w-4" />
                                                             <span>Make admin</span>
                                                         </DropdownMenuItem>
                                                     )}
 
-                                                    {user.role === 'admin' && (
+                                                    {user.systemRole === 'admin' && (
                                                         <DropdownMenuItem
                                                             onClick={(e) => { e.stopPropagation(); handleChangeRole(user, 'user') }}
-                                                            disabled={user.id === currentUser?.id}
+                                                            disabled={user.id === session.user.id}
                                                         >
                                                             <UserIcon className="mr-2 h-4 w-4" />
                                                             <span>Remove admin</span>
@@ -182,7 +182,7 @@ export function UserManagement({ users, currentUser }: UserManagementProps) {
                                                     <DropdownMenuItem
                                                         className="text-destructive focus:text-destructive"
                                                         onClick={(e) => { e.stopPropagation(); handleDeleteUser(user) }}
-                                                        disabled={user.id === currentUser?.id}
+                                                        disabled={user.id === session.user.id}
                                                     >
                                                         <Trash2 className="mr-2 h-4 w-4" />
                                                         <span>Delete user</span>

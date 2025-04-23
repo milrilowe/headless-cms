@@ -2,11 +2,9 @@ import type { User as PrismaUser } from '@prisma/client';
 import type { Site as PrismaSite } from '@prisma/client';
 
 // Session user with only essential info
-export type ISessionUser = {
-    id: IUser['id']
-    email: IUser['email']
-    name?: IUser['name']
-    role: IUser['systemRole']
+export type ISession = {
+    user: IUser,
+    isAdmin: boolean
 }
 
 export type IUser = Omit<PrismaUser, 'password'>

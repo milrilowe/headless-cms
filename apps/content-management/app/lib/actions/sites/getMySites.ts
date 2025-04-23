@@ -7,7 +7,7 @@ export const getMySites = createServerFn({ method: 'GET' })
     .middleware([requireisAuthenticatedMiddleware])
     .handler(async ({ context }) => {
         try {
-            return await getSitesForUser(context.user.id);
+            return await getSitesForUser(context.session.user.id);
 
         } catch (error) {
             console.error('Error getting site list:', error);
